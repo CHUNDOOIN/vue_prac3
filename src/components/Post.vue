@@ -24,9 +24,9 @@ export default {
     props: {
         myData: Object,
     },
-    mounted() {
-        console.log(this.myData);
-    },
+    // mounted() {
+    //     console.log(this.myData);
+    // },
 };
 </script>
 

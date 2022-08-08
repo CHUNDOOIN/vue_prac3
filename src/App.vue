@@ -10,6 +10,7 @@
     </div>
 
     <Container :myData="myData" />
+    <button class="more-btn" @click="more">더보기</button>
 
     <!-- <div class="sample-box">임시 박스</div> -->
 
@@ -24,11 +25,15 @@
 <script>
 import Container from "./components/Container.vue";
 import data from "./assets/data.js";
+import axios from "axios";
+
+axios.get();
 
 export default {
     name: "App",
     data() {
         return {
+            btnCount: 0,
             myData: data,
         };
     },
@@ -36,6 +41,32 @@ export default {
     // mounted() {
     //     console.log(this.myData);
     // },
+    methods: {
+        more() {
+            this.btnCount++;
+            console.log("더보기를 누르셨습니다.");
+
+            if (this.btnCount === 1) {
+                axios
+                    .get("https://codingapple1.github.io/vue/more0.json")
+                    .then((result) => {
+                        this.myData.push(result.data);
+                    })
+                    .catch((error) => console.log(error));
+            }
+            if (this.btnCount === 2) {
+                axios
+                    .get("https://codingapple1.github.io/vue/more1.json")
+                    .then((result) => {
+                        this.myData.push(result.data);
+                    })
+                    .catch((error) => console.log(error));
+            }
+            if (this.btnCount > 2) {
+                alert("게시글이 더이상 없는데요?");
+            }
+        },
+    },
 };
 </script>
 
@@ -105,6 +136,17 @@ ul {
 .input-plus {
     cursor: pointer;
 }
+
+.more-btn {
+    border: none;
+    background-color: bisque;
+    cursor: pointer;
+}
+
+.more-btn:hover {
+    background-color: red;
+}
+
 #app {
     box-sizing: border-box;
     font-family: "consolas";
