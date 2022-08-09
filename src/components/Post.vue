@@ -6,10 +6,13 @@
         </div>
         <div
             class="post-body"
+            :class="myData.filter"
             :style="{ backgroundImage: `url(${myData.postImage})` }"
         ></div>
         <div class="post-content">
-            <p>{{ myData.likes }} likes</p>
+            <p @click="$store.commit('like', i)">
+                💖 likes {{ $store.state.likes[i].likes }}
+            </p>
             <p>
                 <strong>{{ myData.name }}</strong> {{ myData.content }}
             </p>
@@ -23,10 +26,11 @@ export default {
     name: "post",
     props: {
         myData: Object,
+        i: Number,
     },
-    // mounted() {
-    //     console.log(this.myData);
-    // },
+    mounted() {
+        console.log(this.i);
+    },
 };
 </script>
 

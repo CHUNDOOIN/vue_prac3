@@ -1,25 +1,56 @@
 <template>
     <div class="header">
         <ul class="header-button-left">
-            <li>Cancel</li>
+            <li v-if="nowPage == 1" @click="nowPage--">Cancel</li>
+            <li v-if="nowPage == 2" @click="nowPage--">Cancel</li>
         </ul>
         <ul class="header-button-right">
-            <li>Next</li>
+            <!-- <li @click="nowPage++">Next</li> -->
+            <li v-if="nowPage == 1" @click="nowPage++">Next</li>
+            <li v-if="nowPage == 2" @click="write">쓰기</li>
         </ul>
         <img src="./assets/logo.png" class="logo" />
     </div>
 
-    <Container :myData="myData" />
-    <button class="more-btn" @click="more">더보기</button>
+    <!-- vuex 연습
+    <h4>안녕 {{ $store.state.name }}</h4>
+    <button @click="$store.commit('changeName')">버튼</button>
+
+    <p>내 나이는? {{ $store.state.age }}</p>
+    <button @click="$store.commit('changeAge')">구라 ㄴㄴ 실제 나이는?</button> -->
+
+    <Container
+        @write="inputValue = $event"
+        :myData="myData"
+        :nowPage="nowPage"
+        :imgUrl="imgUrl"
+        :choiceFilter="choiceFilter"
+    />
+    <div class="btn-wrap">
+        <button v-if="nowPage == 0" class="more-btn" @click="more">
+            더보기
+        </button>
+    </div>
 
     <!-- <div class="sample-box">임시 박스</div> -->
 
     <div class="footer">
         <ul class="footer-button-plus">
-            <input type="file" id="file" class="inputfile" />
+            <input @change="upload" type="file" id="file" class="inputfile" />
             <label for="file" class="input-plus">+</label>
         </ul>
     </div>
+
+    <!-- 탭에 따라 내용이 바뀌는 부분 구현 -->
+    <!-- <div v-if="tab == 0">내용0</div>
+    <div v-if="tab == 1">내용1</div>
+    <div v-if="tab == 2">내용2</div>
+
+    <button @click="tab = 0">버튼0</button>
+    <button @click="tab = 1">버튼1</button>
+    <button @click="tab = 2">버튼2</button>
+
+    <div style="margin-top: 500px"></div> -->
 </template>
 
 <script>
@@ -27,14 +58,16 @@ import Container from "./components/Container.vue";
 import data from "./assets/data.js";
 import axios from "axios";
 
-axios.get();
-
 export default {
     name: "App",
     data() {
         return {
             btnCount: 0,
             myData: data,
+            nowPage: 0,
+            imgUrl: "",
+            inputValue: "",
+            choiceFilter: "",
         };
     },
     components: { Container },
@@ -42,12 +75,12 @@ export default {
     //     console.log(this.myData);
     // },
     methods: {
-        more() {
+        async more() {
             this.btnCount++;
             console.log("더보기를 누르셨습니다.");
 
             if (this.btnCount === 1) {
-                axios
+                await axios
                     .get("https://codingapple1.github.io/vue/more0.json")
                     .then((result) => {
                         this.myData.push(result.data);
@@ -55,7 +88,7 @@ export default {
                     .catch((error) => console.log(error));
             }
             if (this.btnCount === 2) {
-                axios
+                await axios
                     .get("https://codingapple1.github.io/vue/more1.json")
                     .then((result) => {
                         this.myData.push(result.data);
@@ -66,6 +99,33 @@ export default {
                 alert("게시글이 더이상 없는데요?");
             }
         },
+        write() {
+            var myPost = {
+                name: "Dooin",
+                userImage: "https://placeimg.com/100/100/arch",
+                postImage: this.imgUrl,
+                likes: 99,
+                date: "May 15",
+                liked: false,
+                content: this.inputValue,
+                filter: this.choiceFilter,
+            };
+            this.myData.unshift(myPost);
+            this.nowPage = 0;
+        },
+        upload(e) {
+            const imgFile = e.target.files;
+            console.log(imgFile[0].type);
+            this.imgUrl = URL.createObjectURL(imgFile[0]);
+            console.log("이미지 URL", this.imgUrl);
+            this.nowPage = 1;
+        },
+    },
+
+    mounted() {
+        this.emitter.on("select", (filter) => {
+            this.choiceFilter = filter;
+        });
     },
 };
 </script>
@@ -137,14 +197,23 @@ ul {
     cursor: pointer;
 }
 
+.btn-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .more-btn {
+    border-radius: 3px;
     border: none;
-    background-color: bisque;
+
+    background-color: rgb(191, 191, 191);
     cursor: pointer;
 }
 
 .more-btn:hover {
-    background-color: red;
+    background-color: black;
+    color: white;
 }
 
 #app {
