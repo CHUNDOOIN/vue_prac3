@@ -14,7 +14,7 @@ export default {
 
     props: {
         imgUrl: String,
-        filters: Array,
+        filters: String,
     },
 
     methods: {

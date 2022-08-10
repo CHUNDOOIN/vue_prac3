@@ -1,16 +1,23 @@
 <template>
     <div class="header">
         <ul class="header-button-left">
+            <li v-if="nowPage == 0" @click="nowPage = 3">follower</li>
             <li v-if="nowPage == 1" @click="nowPage--">Cancel</li>
             <li v-if="nowPage == 2" @click="nowPage--">Cancel</li>
+            <li v-if="nowPage == 3" @click="nowPage = 0">Cancel</li>
         </ul>
         <ul class="header-button-right">
             <!-- <li @click="nowPage++">Next</li> -->
+            <li v-if="nowPage == 0" @click="nowPage++">Write</li>
             <li v-if="nowPage == 1" @click="nowPage++">Next</li>
-            <li v-if="nowPage == 2" @click="write">쓰기</li>
+            <li v-if="nowPage == 2" @click="write">OK</li>
         </ul>
         <img src="./assets/logo.png" class="logo" />
     </div>
+
+    <!-- vuex actions 연습
+    <p>{{ $store.state.more }}</p>
+    <button @click="$store.dispatch('getData')">버튼</button> -->
 
     <!-- vuex 연습
     <h4>안녕 {{ $store.state.name }}</h4>
@@ -34,10 +41,14 @@
 
     <!-- <div class="sample-box">임시 박스</div> -->
 
+    <!-- vue computed 연습
+    <p>{{ now2 }} {{ now() }}{{ count }}</p>
+    <button @click="count++">버튼</button> -->
+
     <div class="footer">
         <ul class="footer-button-plus">
             <input @change="upload" type="file" id="file" class="inputfile" />
-            <label for="file" class="input-plus">+</label>
+            <label for="file" class="input-plus" v-if="nowPage == 1">+</label>
         </ul>
     </div>
 
@@ -54,9 +65,9 @@
 </template>
 
 <script>
-import Container from "./components/Container.vue";
-import data from "./assets/data.js";
 import axios from "axios";
+import data from "./assets/data.js";
+import Container from "./components/Container.vue";
 
 export default {
     name: "App",
@@ -68,13 +79,25 @@ export default {
             imgUrl: "",
             inputValue: "",
             choiceFilter: "",
+            count: 0,
         };
     },
     components: { Container },
     // mounted() {
     //     console.log(this.myData);
     // },
+
+    computed: {
+        now2() {
+            return new Date();
+        },
+    },
+
     methods: {
+        now() {
+            return new Date();
+        },
+
         async more() {
             this.btnCount++;
             console.log("더보기를 누르셨습니다.");

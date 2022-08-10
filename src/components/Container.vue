@@ -53,12 +53,17 @@ write!</textarea
                 >
             </div>
         </div>
+
+        <div v-if="nowPage == 3">
+            <MyPage />
+        </div>
     </div>
 </template>
 
 <script>
 import Post from "./Post.vue";
 import FilterBox from "./FilterBox.vue";
+import MyPage from "./MyPage.vue";
 
 export default {
     name: "Container",
@@ -100,7 +105,7 @@ export default {
         imgUrl: String,
         choiceFilter: String,
     },
-    components: { Post, FilterBox },
+    components: { Post, FilterBox, MyPage },
     updated() {
         console.log("컨테이너", this.imgUrl);
     },

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createStore } from "vuex";
 import data from "./assets/data.js";
 
@@ -7,9 +8,13 @@ const store = createStore({
             name: "kim",
             age: "20",
             likes: data,
+            more: {},
         };
     },
     mutations: {
+        setMore(state) {
+            state.more = data[0];
+        },
         changeName(state) {
             state.name = "CHUN";
         },
@@ -26,6 +31,16 @@ const store = createStore({
                 state.likes[i].liked = true;
                 state.likes[i].likes++;
             }
+        },
+    },
+    actions: {
+        async getData(context) {
+            await axios
+                .get("https://codingapple1.github.io/vue/more0.json")
+                .then((result) => {
+                    console.log(result.data);
+                    context.commit("setMore", result.data);
+                });
         },
     },
 });

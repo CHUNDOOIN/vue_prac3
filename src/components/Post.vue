@@ -11,7 +11,12 @@
         ></div>
         <div class="post-content">
             <p @click="$store.commit('like', i)">
-                💖 likes {{ $store.state.likes[i].likes }}
+                <span v-if="$store.state.likes[i].liked === true"
+                    >💛 likes {{ $store.state.likes[i].likes }}</span
+                >
+                <span v-if="$store.state.likes[i].liked === false"
+                    >🖤 likes {{ $store.state.likes[i].likes }}</span
+                >
             </p>
             <p>
                 <strong>{{ myData.name }}</strong> {{ myData.content }}
